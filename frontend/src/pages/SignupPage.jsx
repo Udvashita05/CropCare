@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { User, Mail, Lock, Loader2, Leaf, ArrowLeft, ChevronRight, MapPin } from 'lucide-react';
 import Header from '../components/Header';
 import BackgroundParticles from '../components/BackgroundParticles';
+import API_BASE_URL from '../config';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -22,7 +23,7 @@ const SignupPage = () => {
     setError('');
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),

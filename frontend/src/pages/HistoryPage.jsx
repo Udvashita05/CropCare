@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, AlertCircle, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import API_BASE_URL from '../config';
 
 export default function HistoryPage() {
   const [scans, setScans] = useState([]);
@@ -15,7 +16,7 @@ export default function HistoryPage() {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/history', {
+      const response = await fetch(`${API_BASE_URL}/api/history`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -56,7 +57,7 @@ export default function HistoryPage() {
           {scans.map((scan) => (
             <div key={scan.id} className="card-premium" style={{ display: 'flex', gap: '16px', padding: '12px', marginBottom: '0', alignItems: 'center' }}>
               <img 
-                src={`http://127.0.0.1:5000${scan.image_url}`} 
+                src={`${API_BASE_URL}${scan.image_url}`} 
                 alt={scan.disease_name}
                 style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: 'var(--border-radius-sm)' }}
               />

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import WeatherSection from '../components/WeatherSection';
+import API_BASE_URL from '../config';
 
 export default function ScanPage() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -31,7 +32,7 @@ export default function ScanPage() {
     formData.append('image', selectedImage);
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/analyze', {
+      const response = await fetch(`${API_BASE_URL}/api/analyze`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Filter, Info, ShieldCheck, AlertTriangle, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import API_BASE_URL from '../../config';
 
 const DiseaseEncyclopedia = () => {
   const { t } = useLanguage();
@@ -51,7 +52,7 @@ const DiseaseEncyclopedia = () => {
     if (query.length > 2) {
       setLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:5000/api/knowledge/diseases?crop=${encodeURIComponent(query)}`);
+        const res = await fetch(`${API_BASE_URL}/api/knowledge/diseases?crop=${encodeURIComponent(query)}`);
         const data = await res.json();
         if (Array.isArray(data)) {
           setDynamicDiseases(data);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Star, TrendingUp, Users, Loader2 } from 'lucide-react';
+import API_BASE_URL from '../../config';
 
 export const VideoLearningCenter = ({ searchQuery = 'Organic Farming' }) => {
   const [videos, setVideos] = useState([]);
@@ -11,7 +12,7 @@ export const VideoLearningCenter = ({ searchQuery = 'Organic Farming' }) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/youtube/search?query=${encodeURIComponent(searchQuery)}`);
+        const response = await fetch(`${API_BASE_URL}/api/youtube/search?query=${encodeURIComponent(searchQuery)}`);
         if (!response.ok) throw new Error('Failed to fetch videos');
         const data = await response.json();
         setVideos(data);

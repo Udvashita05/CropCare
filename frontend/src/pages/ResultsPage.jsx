@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { ShieldAlert, CheckCircle2, ChevronLeft, Droplets, Info, Volume2, Sparkles, ShoppingCart, Scale, ExternalLink, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import API_BASE_URL from '../config';
 
 export default function ResultsPage() {
   const location = useLocation();
@@ -72,7 +73,7 @@ export default function ResultsPage() {
 
       <div className="image-preview-container" style={{ marginBottom: '24px' }}>
         <img 
-          src={`http://127.0.0.1:5000${result.image_url}`} 
+          src={`${API_BASE_URL}${result.image_url}`} 
           alt="Scanned Crop" 
           style={{ height: '240px' }}
         />

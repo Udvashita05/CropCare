@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { Mail, Lock, Loader2, Leaf, ArrowLeft, ChevronRight } from 'lucide-react';
 import Header from '../components/Header';
 import BackgroundParticles from '../components/BackgroundParticles';
+import API_BASE_URL from '../config';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
