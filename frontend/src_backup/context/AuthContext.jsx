@@ -27,11 +27,16 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
+        localStorage.setItem('user', JSON.stringify(data));
       } else {
         logout();
       }
     } catch (err) {
-      console.error('Profile fetch failed', err);
+      console.error('Profile fetch failed, loading from local cache...', err);
+      const cachedUser = localStorage.getItem('user');
+      if (cachedUser) {
+        setUser(JSON.parse(cachedUser));
+      }
     } finally {
       setLoading(false);
     }
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }) => {
     if (res.ok) {
       setToken(data.token);
       setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
     } else {
       throw new Error(data.error || 'Signup failed');
     }
@@ -56,12 +62,14 @@ export const AuthProvider = ({ children }) => {
   const login = (userData, userToken) => {
     setToken(userToken);
     setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   return (

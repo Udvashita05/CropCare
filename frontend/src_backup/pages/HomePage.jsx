@@ -48,7 +48,9 @@ export default function HomePage() {
         </div>
         
         <div className="flex flex-col gap-4">
-          <h1 className="hidden md:block text-4xl mb-4">{t('welcomeBack') || 'Grow Smarter with AI'}</h1>
+          <h1 className="text-3xl md:text-4xl mb-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+            {t('welcomeBack')}, {user?.full_name || 'Farmer'} 👋
+          </h1>
           <button className="btn-primary" onClick={() => navigate('/crop-details')} style={{ padding: '24px' }}>
             <Sparkles size={24} /> <span style={{ fontSize: '18px' }}>{t('scan')}</span>
           </button>
@@ -72,19 +74,27 @@ export default function HomePage() {
           }}>
             <img src="/market_edge_icon_1777741212875.png" alt="Market" style={{ width: '80px', height: '80px' }} />
             <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, color: '#b78b00', fontSize: '16px' }}>{t('liveMarketPrices')}</h4>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
+              <h4 style={{ margin: 0, color: '#b78b00', fontSize: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{t('liveMarketPrices')}</span>
+                <span style={{ fontSize: '11px', background: '#ffc107', color: '#5d3e00', padding: '3px 8px', borderRadius: '12px', fontWeight: 'bold' }}>APMC Mandi</span>
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: '16px' }}>
                 <div>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>{t('wheat')}</p>
-                  <p style={{ margin: 0, fontSize: '20px', color: 'var(--text-primary)', fontWeight: '800' }}>₹2,450</p>
+                  <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>{t('wheat')}</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '18px', color: 'var(--text-primary)', fontWeight: '800' }}>₹2,450<span style={{ fontSize: '11px', fontWeight: 'normal', color: 'var(--text-muted)' }}>{t('quintal')}</span></p>
                 </div>
                 <div>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>{t('rice')}</p>
-                  <p style={{ margin: 0, fontSize: '20px', color: 'var(--text-primary)', fontWeight: '800' }}>₹3,800</p>
+                  <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>{t('rice')}</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '18px', color: 'var(--text-primary)', fontWeight: '800' }}>₹3,800<span style={{ fontSize: '11px', fontWeight: 'normal', color: 'var(--text-muted)' }}>{t('quintal')}</span></p>
                 </div>
-                <div style={{ color: 'var(--success-color)', fontSize: '14px', fontWeight: 'bold' }}>
-                  +2.4% ↑
+                <div>
+                  <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>{t('cotton')}</p>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '18px', color: 'var(--text-primary)', fontWeight: '800' }}>₹7,200<span style={{ fontSize: '11px', fontWeight: 'normal', color: 'var(--text-muted)' }}>{t('quintal')}</span></p>
                 </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '8px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Updated: Today (National Average)</span>
+                <span style={{ color: 'var(--success-color)', fontSize: '13px', fontWeight: 'bold' }}>+2.4% ↑</span>
               </div>
             </div>
           </div>

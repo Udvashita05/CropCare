@@ -44,16 +44,16 @@ export default function SideNav() {
           onChange={(e) => toggleLanguage(e.target.value)}
           style={{ flex: 2, height: '45px', border: '1px solid var(--glass-border)' }}
         >
-          <option value="en">EN</option>
+          <option value="en">English</option>
           <option value="bn">বাংলা</option>
           <option value="hi">हिंदी</option>
-          <option value="mr">MR</option>
-          <option value="ta">TA</option>
-          <option value="te">TE</option>
-          <option value="kn">KN</option>
-          <option value="ml">ML</option>
-          <option value="gu">GU</option>
-          <option value="pa">PA</option>
+          <option value="mr">मराठी</option>
+          <option value="ta">தமிழ்</option>
+          <option value="te">తెలుగు</option>
+          <option value="kn">ಕನ್ನಡ</option>
+          <option value="ml">മലയാളം</option>
+          <option value="gu">ગુજરાતી</option>
+          <option value="pa">ਪੰਜਾਬੀ</option>
         </select>
       </div>
 

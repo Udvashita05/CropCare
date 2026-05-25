@@ -93,6 +93,9 @@ export const translations = {
     earlyDetectionDesc: 'Identify diseases before they spread.',
     pestControl: 'Pest Control',
     pestControlDesc: 'Get verified treatment suggestions.',
+    welcomeBack: 'Welcome Back',
+    cotton: 'Cotton',
+    quintal: '/ quintal',
   },
   bn: {
     appName: 'ক্রপকেয়ার AI',
@@ -176,6 +179,9 @@ export const translations = {
     earlyDetectionDesc: 'ছড়িয়ে পড়ার আগেই রোগ শনাক্ত করুন।',
     pestControl: 'পোকামাকড় নিয়ন্ত্রণ',
     pestControlDesc: 'যাচাইকৃত প্রতিকার পান।',
+    welcomeBack: 'আবার স্বাগতম',
+    cotton: 'তুলা',
+    quintal: '/ কুইন্টাল',
   },
   hi: {
     appName: 'क्रॉपकेयर AI',
@@ -259,6 +265,9 @@ export const translations = {
     earlyDetectionDesc: 'बीमारियों को फैलने से पहले पहचानें।',
     pestControl: 'कीट नियंत्रण',
     pestControlDesc: 'सत्यापित उपचार सुझाव प्राप्त करें।',
+    welcomeBack: 'फिर से स्वागत है',
+    cotton: 'कपास',
+    quintal: '/ कुंतल',
   },
   mr: {
     appName: 'क्रॉपकेअर AI',
@@ -315,6 +324,9 @@ export const translations = {
     welcomeMessage: 'स्मार्ट शेतीसाठी आपला AI-आधारित सोबती। रोगांचे निदान करा, हवामान इशारे मिळवा आणि खतांचे प्रमाण अचूक करा - सर्व काही एकाच ठिकाणी।',
     getStarted: 'शेती सुरू करा',
     joinCommunity: 'समुदायात सामील व्हा',
+    welcomeBack: 'पुन्हा स्वागत आहे',
+    cotton: 'कापूस',
+    quintal: '/ क्विंटल',
   },
   ta: {
     appName: 'கிராப்கேர் AI',
@@ -371,6 +383,9 @@ export const translations = {
     welcomeMessage: 'ஸ்மார்ட் விவசாயத்திற்கான உங்கள் AI-இயங்கும் துணை। நோய்களைக் கண்டறியவும், வானிலை எச்சரிக்கைகளைப் பெறவும் மற்றும் உர அளவை மேம்படுத்தவும் - அனைத்தும் ஒரே இடத்தில்।',
     getStarted: 'விவசாயத்தைத் தொடங்குங்கள்',
     joinCommunity: 'சமூகத்தில் இணையுங்கள்',
+    welcomeBack: 'மீண்டும் வருக',
+    cotton: 'பருத்தி',
+    quintal: '/ குவின்டால்',
   },
   te: {
     appName: 'క్రాప్ కేర్ AI',
@@ -427,6 +442,9 @@ export const translations = {
     welcomeMessage: 'స్మార్ట్ వ్యవసాయం కోసం మీ AI-ఆధారిత తోడు। వ్యాధులను గుర్తించండి, వాతావరణ హెచ్చరికలను పొందండి మరియు ఎరువుల మోతాదును ఆప్టిమైజ్ చేయండి - అన్నీ ఒకే చోట।',
     getStarted: 'వ్యవసాయం ప్రారంభించండి',
     joinCommunity: 'కమ్యూనిటీలో చేరండి',
+    welcomeBack: 'మళ్ళీ స్వాగతం',
+    cotton: 'ప్రత్తి',
+    quintal: '/ క్వింటాల్',
   },
   kn: {
     appName: 'ಕ್ರಾಪ್ ಕೇರ್ AI',
@@ -483,6 +501,9 @@ export const translations = {
     welcomeMessage: 'ಸ್ಮಾರ್ಟ್ ಕೃಷಿಗಾಗಿ ನಿಮ್ಮ AI-ಚಾಲಿತ ಸಂಗಾತಿ। ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ, ಹವಾಮಾನ ಮುನ್ನೆಚ್ಚರಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ ಮತ್ತು ಗೊಬ್ಬರದ ಪ್ರಮಾಣವನ್ನು ಉತ್ತಮಗೊಳಿಸಿ - ಎಲ್ಲವೂ ಒಂದೇ ಕಡೆ।',
     getStarted: 'ಕೃಷಿ ಆರಂಭಿಸಿ',
     joinCommunity: 'ಸಮುದಾಯಕ್ಕೆ ಸೇರಿ',
+    welcomeBack: 'ಮತ್ತೆ ಸ್ವಾಗತ',
+    cotton: 'ಹತ್ತಿ',
+    quintal: '/ ಕ್ವಿಂಟಾಲ್',
   },
   ml: {
     appName: 'ക്രോപ് കെയർ AI',
@@ -539,6 +560,9 @@ export const translations = {
     welcomeMessage: 'സ്മാർട്ട് കൃഷിക്കായി നിങ്ങളുടെ AI-അധിഷ്ഠിത കൂട്ടാളി। രോഗങ്ങൾ കണ്ടെത്തുക, കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ നേടുക, വളത്തിന്റെ അളവ് കൃത്യമാക്കുക - എല്ലാം ഒരിടത്ത്।',
     getStarted: 'കൃഷി ആരംഭിക്കുക',
     joinCommunity: 'കൂട്ടായ്മയിൽ ചേരുക',
+    welcomeBack: 'വീണ്ടും സ്വാഗതം',
+    cotton: 'പരുത്തി',
+    quintal: '/ ക്വിന്റൽ',
   },
   gu: {
     appName: 'ક્રોપકેર AI',
@@ -595,6 +619,9 @@ export const translations = {
     welcomeMessage: 'સ્માર્ટ ખેતી માટે તમારો AI-આધારિત સાથી। રોગો શોધો, હવામાન ચેતવણીઓ મેળવો અને ખાતરનું પ્રમાણ સચોટ કરો - બધું એક જ જગ્યાએ।',
     getStarted: 'ખેતી શરૂ કરો',
     joinCommunity: 'સમુદાયમાં જોડાઓ',
+    welcomeBack: 'ફરી સ્વાગત છે',
+    cotton: 'કપાસ',
+    quintal: '/ ક્વિન્ટલ',
   },
   pa: {
     appName: 'ਕਰੌਪਕੇਅਰ AI',
@@ -651,6 +678,9 @@ export const translations = {
     welcomeMessage: 'ਸਮਾਰਟ ਖੇਤੀ ਲਈ ਤੁਹਾਡਾ AI-ਆਧਾਰਿਤ ਸਾਥੀ। ਬਿਮਾਰੀਆਂ ਦਾ ਪਤਾ ਲਗਾਓ, ਮੌਸਮ ਦੀਆਂ ਚੇਤਾਵਨੀਆਂ ਪ੍ਰਾਪਤ ਕਰੋ ਅਤੇ ਖਾਦ ਦੀ ਮਾਤਰਾ ਨੂੰ ਅਨੁਕੂਲ ਬਣਾਓ - ਸਭ ਕੁਝ ਇੱਕੋ ਥਾਂ ਤੇ।',
     getStarted: 'ਖੇਤੀ ਸ਼ੁਰੂ ਕਰੋ',
     joinCommunity: 'ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ',
+    welcomeBack: 'ਜੀ ਆਇਆਂ ਨੂੰ',
+    cotton: 'ਕਪਾਹ',
+    quintal: '/ ਕੁਇੰਟਲ',
   },
 };
 
@@ -665,6 +695,7 @@ export const LanguageProvider = ({ children }) => {
           // In a real app, you'd use a reverse geocoding API to get the country/region
           // For this demo, we'll simulate or stick to English unless the user changes it
           // or we could check browser language
+          const browserLang = (navigator.language || '').split('-')[0];
           if (['en', 'bn', 'hi', 'mr', 'ta', 'te', 'kn', 'ml', 'gu', 'pa'].includes(browserLang)) {
             // setLanguage(browserLang);
           }
@@ -674,7 +705,12 @@ export const LanguageProvider = ({ children }) => {
     }
   }, []);
 
-  const t = (key) => translations[language][key] || key;
+  const t = (key) => {
+    if (translations[language] && translations[language][key]) {
+      return translations[language][key];
+    }
+    return translations['en'][key] || key;
+  };
 
   const toggleLanguage = (lang) => {
     if (translations[lang]) {

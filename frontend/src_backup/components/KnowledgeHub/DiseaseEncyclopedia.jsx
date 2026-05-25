@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Search, Filter, Info, ShieldCheck, AlertTriangle, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
 import API_BASE_URL from '../../config';
+
 
 const DiseaseEncyclopedia = () => {
   const { t } = useLanguage();
+  const { token } = useAuth();
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDisease, setSelectedDisease] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dynamicDiseases, setDynamicDiseases] = useState([]);
+  const [isOfflineResult, setIsOfflineResult] = useState(false);
 
   const initialDiseases = [
     {
@@ -47,24 +51,138 @@ const DiseaseEncyclopedia = () => {
     }
   ];
 
+  const offlineCropFallbacks = {
+    wheat: [
+      {
+        id: 'wheat_rust',
+        name: "Wheat Rust (Puccinia)",
+        crop: "Wheat",
+        severity: "High",
+        image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=800",
+        symptoms: "Yellow, orange, or reddish-brown powdery pustules on leaves, stems, and spikes.",
+        causes: "Fungal pathogens (Puccinia graminis, P. striiformis, P. triticina). Spread by windborne spores.",
+        prevention: "Plant rust-resistant cultivars, eradicate volunteer wheat plants, and sow early.",
+        treatment: "Apply triazole or strobulurin fungicides (Tebuconazole, Propiconazole) at first sign of infection."
+      },
+      {
+        id: 'wheat_powdery_mildew',
+        name: "Powdery Mildew of Wheat",
+        crop: "Wheat",
+        severity: "Medium",
+        image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800",
+        symptoms: "White to light gray powdery patches of mycelium and conidia on leaves, stems, and leaf sheaths.",
+        causes: "Fungi (Blumeria graminis f. sp. tritici). Favored by cool, humid weather and dense crop stands.",
+        prevention: "Avoid excessive nitrogen fertilization, sow at proper density, and use resistant varieties.",
+        treatment: "Apply systemic fungicides like Triadimefon or Propiconazole if disease levels exceed thresholds."
+      }
+    ],
+    cotton: [
+      {
+        id: 'cotton_leaf_curl',
+        name: "Cotton Leaf Curl Virus (CLCuV)",
+        crop: "Cotton",
+        severity: "High",
+        image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&q=80&w=800",
+        symptoms: "Upward or downward curling of leaves, thickening of veins, and leaf-like enations on undersides.",
+        causes: "Begomovirus transmitted by Whiteflies (Bemisia tabaci).",
+        prevention: "Destroy alternate weed hosts, cultivate CLCuV-resistant varieties, and control whitefly vector early.",
+        treatment: "Use systemic insecticides (Acetamiprid, Diafenthiuron) to manage the whitefly vector."
+      }
+    ],
+    corn: [
+      {
+        id: 'corn_smut',
+        name: "Common Corn Smut (Ustilago maydis)",
+        crop: "Corn",
+        severity: "Medium",
+        image: "https://images.unsplash.com/photo-1551754626-787a49df515e?auto=format&fit=crop&q=80&w=800",
+        symptoms: "Large, white, fleshy galls or swellings on ears, tassels, stalks, and leaves that later turn black and powdery.",
+        causes: "Fungus Ustilago maydis. Spores survive in soil and crop debris.",
+        prevention: "Avoid mechanical damage to stalks, choose resistant varieties, and maintain crop rotation.",
+        treatment: "Remove galls before they rupture. Fungicide seed treatments can help reduce soil-borne inoculum."
+      }
+    ],
+    maize: [
+      {
+        id: 'maize_smut',
+        name: "Common Corn Smut (Ustilago maydis)",
+        crop: "Maize",
+        severity: "Medium",
+        image: "https://images.unsplash.com/photo-1551754626-787a49df515e?auto=format&fit=crop&q=80&w=800",
+        symptoms: "Large, white, fleshy galls or swellings on ears, tassels, stalks, and leaves that later turn black and powdery.",
+        causes: "Fungus Ustilago maydis. Spores survive in soil and crop debris.",
+        prevention: "Avoid mechanical damage to stalks, choose resistant varieties, and maintain crop rotation.",
+        treatment: "Remove galls before they rupture. Fungicide seed treatments can help reduce soil-borne inoculum."
+      }
+    ]
+  };
+
   const handleSearch = async (query) => {
     setSearchQuery(query);
     if (query.length > 2) {
       setLoading(true);
+      setIsOfflineResult(false);
+      
+      if (!navigator.onLine) {
+        const cleanQuery = query.toLowerCase().trim();
+        const cached = localStorage.getItem(`disease_search_${cleanQuery}`);
+        if (cached) {
+          setDynamicDiseases(JSON.parse(cached));
+          setIsOfflineResult(true);
+          setFilter('Search Results');
+        } else if (offlineCropFallbacks[cleanQuery]) {
+          setDynamicDiseases(offlineCropFallbacks[cleanQuery]);
+          setIsOfflineResult(true);
+          setFilter('Search Results');
+        } else {
+          const matchedKey = Object.keys(offlineCropFallbacks).find(key => 
+            key.includes(cleanQuery) || cleanQuery.includes(key)
+          );
+          if (matchedKey) {
+            setDynamicDiseases(offlineCropFallbacks[matchedKey]);
+            setIsOfflineResult(true);
+            setFilter('Search Results');
+          } else {
+            setDynamicDiseases([]);
+            setFilter('Search Results');
+          }
+        }
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`${API_BASE_URL}/api/knowledge/diseases?crop=${encodeURIComponent(query)}`);
+        const res = await fetch(`${API_BASE_URL}/api/knowledge/diseases?crop=${encodeURIComponent(query)}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         const data = await res.json();
         if (Array.isArray(data)) {
           setDynamicDiseases(data);
+          localStorage.setItem(`disease_search_${query.toLowerCase().trim()}`, JSON.stringify(data));
           setFilter('Search Results');
         }
       } catch (err) {
-        console.error("Search error:", err);
+        console.error("Search error, falling back offline:", err);
+        const cleanQuery = query.toLowerCase().trim();
+        const cached = localStorage.getItem(`disease_search_${cleanQuery}`);
+        if (cached) {
+          setDynamicDiseases(JSON.parse(cached));
+          setIsOfflineResult(true);
+        } else if (offlineCropFallbacks[cleanQuery]) {
+          setDynamicDiseases(offlineCropFallbacks[cleanQuery]);
+          setIsOfflineResult(true);
+        } else {
+          setDynamicDiseases([]);
+        }
+        setFilter('Search Results');
       } finally {
         setLoading(false);
       }
     } else if (query.length === 0) {
       setDynamicDiseases([]);
+      setIsOfflineResult(false);
       setFilter('All');
     }
   };
@@ -108,6 +226,25 @@ const DiseaseEncyclopedia = () => {
       </div>
 
       {/* Grid */}
+      {isOfflineResult && (
+        <div style={{
+          background: 'rgba(255, 152, 0, 0.1)',
+          color: '#e65100',
+          padding: '12px 20px',
+          borderRadius: '16px',
+          fontSize: '13px',
+          fontWeight: '600',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          border: '1px solid rgba(255,152,0,0.2)',
+          marginBottom: '16px'
+        }}>
+          <AlertTriangle size={16} />
+          <span>You are offline. Showing cached or local database fallback results.</span>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 bg-white/30 rounded-[40px] border border-white/20 animate-pulse">
           <div className="w-16 h-16 border-4 border-nature-DEFAULT border-t-transparent rounded-full animate-spin mb-4"></div>

@@ -11,12 +11,34 @@ import jwt from 'jsonwebtoken';
 import connectDB from './db.js';
 import User from './models/User.js';
 import Scan from './models/Scan.js';
+import SearchHistory from './models/SearchHistory.js';
 
 dotenv.config();
 
 // ✅ Configuration
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// ✅ Load Crop Diseases Dataset
+let cropDiseasesDataset = [];
+const datasetPath = path.join(__dirname, 'crop_diseases_dataset.json');
+
+try {
+  if (fs.existsSync(datasetPath)) {
+    cropDiseasesDataset = JSON.parse(fs.readFileSync(datasetPath, 'utf8'));
+    console.log(`📊 Loaded ${cropDiseasesDataset.length} records from crop diseases dataset.`);
+  } else {
+    console.log(`⚠️ Crop diseases dataset not found at ${datasetPath}. Starting with empty dataset.`);
+  }
+} catch (error) {
+  console.error(`❌ Failed to load crop diseases dataset:`, error);
+}
+
+const soilTypes = ["Alluvial", "Black Soil", "Red Soil", "Laterite", "Sandy", "Clayey", "Loamy", "Silty"];
+const irrigationTypes = ["Drip", "Sprinkler", "Rainfed", "Canal Irrigation", "Tubewell"];
+const fertilizerTypes = ["Organic Compost", "NPK (19:19:19)", "Urea (Nitrogen)", "DAP (Phosphorus)", "Potash", "None"];
+const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -261,8 +283,8 @@ app.get('/api/history', authenticateToken, async (req, res) => {
   }
 });
 
-// ✅ Gemini Disease Encyclopedia API
-app.get('/api/knowledge/diseases', async (req, res) => {
+// ✅ Gemini Disease Encyclopedia API (checks local datafile first, auto-stores if missing)
+app.get('/api/knowledge/diseases', authenticateToken, async (req, res) => {
   const { crop } = req.query;
   
   if (!crop) {
@@ -270,6 +292,46 @@ app.get('/api/knowledge/diseases', async (req, res) => {
   }
 
   try {
+    const cleanCropQuery = crop.trim().toLowerCase();
+    const foundDiseases = cropDiseasesDataset.filter(
+      d => d.crop_name.toLowerCase() === cleanCropQuery || d.crop_name.toLowerCase().includes(cleanCropQuery)
+    );
+
+    if (foundDiseases.length > 0) {
+      console.log(`📦 Found crop "${crop}" in local dataset with ${foundDiseases.length} diseases.`);
+      const results = foundDiseases.map(d => ({
+        name: d.disease_name || "Unknown Disease",
+        crop: d.crop_name || "Unknown Crop",
+        severity: d.severity || "Medium",
+        symptoms: d.symptoms || "No symptoms described.",
+        causes: d.causes || "Unknown cause.",
+        prevention: d.prevention || "No prevention steps specified.",
+        treatment: d.treatment || "No treatment steps specified.",
+        image: d.image || `https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=800`
+      }));
+
+      // Save to query history
+      await SearchHistory.create({
+        user_id: req.user.id,
+        query: crop,
+        results,
+        source: 'datafile'
+      });
+
+      return res.json(foundDiseases.map(d => ({
+        id: d.id,
+        name: d.disease_name,
+        crop: d.crop_name,
+        severity: d.severity,
+        symptoms: d.symptoms,
+        causes: d.causes,
+        prevention: d.prevention,
+        treatment: d.treatment,
+        image: d.image || `https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=800`
+      })));
+    }
+
+    console.log(`🔍 Crop "${crop}" not found in local dataset. Querying Gemini AI...`);
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
     const prompt = `
       You are an agricultural expert.
@@ -306,17 +368,88 @@ app.get('/api/knowledge/diseases', async (req, res) => {
 
     const diseases = JSON.parse(responseText);
     
-    // Enrich with dynamic high-quality nature images from Unsplash via a more stable method
-    const enrichedDiseases = diseases.map((d, idx) => ({
-      ...d,
-      id: Date.now() + idx,
-      image: `https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=800` // Default high-quality farm image
+    // Auto-store new records in dataset
+    const newRecords = diseases.map((d, idx) => {
+      const newId = cropDiseasesDataset.length + idx + 1;
+      const soil = pickRandom(soilTypes);
+      const pH = parseFloat((Math.random() * (7.5 - 5.5) + 5.5).toFixed(1));
+      const temp = Math.round(Math.random() * (33 - 18) + 18);
+      const humidity = Math.round(Math.random() * (90 - 50) + 50);
+      const irrigation = pickRandom(irrigationTypes);
+      const fertilizer = pickRandom(fertilizerTypes);
+      const sunlight = Math.round(Math.random() * (10 - 5) + 5);
+
+      return {
+        id: newId,
+        crop_name: d.crop || crop || "Unknown Crop",
+        variety: "Unknown/Standard",
+        disease_name: d.name || "Unknown Disease",
+        severity: d.severity || "Medium",
+        symptoms: d.symptoms || "No symptoms described.",
+        causes: d.causes || "Unknown cause.",
+        prevention: d.prevention || "No prevention steps specified.",
+        treatment: d.treatment || "No treatment steps specified.",
+        field_conditions: {
+          soil_type: soil,
+          soil_pH: pH,
+          temperature_celsius: temp,
+          humidity_percentage: humidity,
+          irrigation_type: irrigation,
+          sunlight_hours: sunlight,
+          fertilizer_used: fertilizer
+        }
+      };
+    });
+
+    cropDiseasesDataset.push(...newRecords);
+    
+    // Write back to dataset file
+    fs.writeFileSync(datasetPath, JSON.stringify(cropDiseasesDataset, null, 2), 'utf-8');
+    console.log(`💾 Automatically stored ${newRecords.length} new records for "${crop}" in the datafile.`);
+
+    const enrichedDiseases = newRecords.map(d => ({
+      id: d.id,
+      name: d.disease_name,
+      crop: d.crop_name,
+      severity: d.severity,
+      symptoms: d.symptoms,
+      causes: d.causes,
+      prevention: d.prevention,
+      treatment: d.treatment,
+      image: `https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=800`
     }));
+
+    // Log this search history to MongoDB
+    await SearchHistory.create({
+      user_id: req.user.id,
+      query: crop,
+      results: enrichedDiseases.map(d => ({
+        name: d.name,
+        crop: d.crop,
+        severity: d.severity,
+        symptoms: d.symptoms,
+        causes: d.causes,
+        prevention: d.prevention,
+        treatment: d.treatment,
+        image: d.image
+      })),
+      source: 'gemini'
+    });
 
     res.json(enrichedDiseases);
   } catch (error) {
     console.error("❌ Gemini Encyclopedia Error:", error);
     res.status(500).json({ error: 'Failed to fetch disease data' });
+  }
+});
+
+// ✅ Search History API (Filtered by user)
+app.get('/api/history/searches', authenticateToken, async (req, res) => {
+  try {
+    const history = await SearchHistory.find({ user_id: req.user.id }).sort({ created_at: -1 });
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch search history' });
   }
 });
 
